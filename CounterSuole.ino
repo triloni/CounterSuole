@@ -62,6 +62,7 @@ int AveradgeDist() {
 void loop() {
 
     if (Error == 0) {                                                                                         // если нет ошибки
+
         delay(50);
         int t_cm = AveradgeDist();                                                                            // считываем показания датчика
 
@@ -86,7 +87,7 @@ Serial.println(counter);
                     digitalWrite(LED, LOW);
                 }
 
-                if (counter == 4 ) {                                                                          // если стопка заполнена
+                if (counter >= 20 ) {                                                                          // если стопка заполнена
 
                     digitalWrite(LED, HIGH);
 
@@ -103,17 +104,29 @@ Serial.println(counter);
                     Serial.println("wait end");                        
 
                     digitalWrite(LED, LOW);                                                                   // выключаем светодиод
-                    counter = 0;                                                                              // обнуляем счетчик                    
-                    
+                                        
                     delay(4000);                                                                              // пауза для забора стельки
                     
                     Blink();                                                                                  // мигаем
+
+                    counter = 0;                                                                              // обнуляем счетчик                    
                 } else {
                     delay(1000);                                                                              // пауза для следующей стельки
                 }                
             }
         } else {                                                                                              // если ошибка чтения
             Error = -1;
+        }
+
+        if (digitalRead(BUTTON) == HIGH) {                                                                    // если нажата кнопка во время цикла
+            digitalWrite(LED, LOW);                                                                   // выключаем светодиод
+            
+            delay(4000);                                                                              // пауза для забора стельки
+            
+            Blink();                                                                                  // мигаем   
+
+            counter = 0;                                                                              // обнуляем счетчик                    
+            Work_Point_cm = AveradgeDist();                                                                       // новая рабочая точка
         }
     } else {                                                                                                  // если ошибка
 
