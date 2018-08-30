@@ -39,21 +39,20 @@ void setup() {
 // считывает среднее 5 значений
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int AveradgeDist() {
-    int res;
-//    Serial.println("Value ");
+    float res;
+    Serial.print("Value: ");
     for (int i = 0; i<5; i++) {
         delay(100);
         int k = sonar.ping_cm();
         res = res + k;
 
-//        Serial.println(k);
+        Serial.print(k); Serial.print(" ");
         
     }
-//    Serial.println("Value end");
-    res = res / 5;
-//    Serial.println("srednee Value ");
-//    Serial.println(res );
+    res = round(res / 5.0);
 
+    Serial.print(" srednee ");
+    Serial.println(res);
     return res;
 }
 
@@ -66,12 +65,9 @@ void loop() {
         delay(2000);
         int t_cm = AveradgeDist();                                                                            // считываем показания датчика
 
-Serial.print("Actuale value: ");
-Serial.println(t_cm);
-
         if (t_cm != 0) {                                                                                      // если показание "удачное"
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
-Serial.print("Change value");              
+Serial.println("Change value");              
                 Work_Point_cm = t_cm;                                                                         // новая рабочая точка
 
                 counter++;                                                                                    // инкримент счетчика
@@ -99,7 +95,7 @@ Serial.println("wait end");
 
 
                     counter = -1;
-                    Work_Point_cm = dist;
+                    Work_Point_cm = AveradgeDist();
 
                     delay(2000);
                     
