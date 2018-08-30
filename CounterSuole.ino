@@ -27,11 +27,18 @@ void setup() {
     pinMode(LED, OUTPUT);
     pinMode(BUTTON, INPUT);
 
+    Blink();                                                                                              // мигаем
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// мигаем - знак приветствия/конец цикла
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int Blink() {
     for (int i = 0; i<3; i++) {
-        digitalWrite(LED, HIGH);                                                                      // мигаем
-        delay(100);
+        digitalWrite(LED, HIGH);                                                                          // мигаем
+        delay(70);
         digitalWrite(LED, LOW);
-        delay(100);
+        delay(70);
     }
 }
 
@@ -41,7 +48,7 @@ void setup() {
 int AveradgeDist() {
     float res;
     for (int i = 0; i<5; i++) {
-        delay(50);
+        delay(5);
         int k = sonar.ping_cm();
         res = res + k;
     }
@@ -55,7 +62,7 @@ int AveradgeDist() {
 void loop() {
 
     if (Error == 0) {                                                                                         // если нет ошибки
-        delay(100);
+        delay(50);
         int t_cm = AveradgeDist();                                                                            // считываем показания датчика
 
 Serial.println(t_cm);
@@ -82,6 +89,8 @@ Serial.println(counter);
                 if (counter == 4 ) {                                                                          // если стопка заполнена
 
                     digitalWrite(LED, HIGH);
+
+                    delay(1500);                                                                              // пауза для последней стельки
                     
                     int dist = 0;                                                                             // временная дистанция
                     do {                                                                                      // цикл ожидания "забирания" стопки стельки
@@ -89,7 +98,7 @@ Serial.println(counter);
                         dist = AveradgeDist();                                                                // считываем показания датчика
                         Serial.print("wait ");                        
                         Serial.println(dist);
-                    } while (dist < 23);                                                                      // если стопка пустая
+                    } while (dist < 24);                                                                      // если стопка пустая
 
                     Serial.println("wait end");                        
 
@@ -97,7 +106,8 @@ Serial.println(counter);
                     counter = 0;                                                                              // обнуляем счетчик                    
                     
                     delay(4000);                                                                              // пауза для забора стельки
-
+                    
+                    Blink();                                                                                  // мигаем
                 } else {
                     delay(1500);                                                                              // пауза для следующей стельки
                 }                
@@ -114,7 +124,6 @@ Serial.println(counter);
            if (millis() - t_refresh_LED > 500) {
               state_LED = 1 - state_LED;
               digitalWrite(LED, state_LED);
-//              Serial.println("Error");
               t_refresh_LED = millis();
            }
             
