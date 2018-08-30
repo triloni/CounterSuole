@@ -81,26 +81,29 @@ Serial.print("Change value");
                 digitalWrite(LED, LOW);
 
                 if (counter == 4 ) {                                                                          // если стопка заполнена
-//
-//Serial.println("counter = 4");
-//                  
-//                    digitalWrite(LED, HIGH);
-//                    
-//                    int dist = 0;                                                                             // временная дистанция
-//                    do {                                                                                      // цикл ожидания "забирания" стопки стельки
-//                        delay(100);
-//                        dist = AveradgeDist();                                                               // считываем показания датчика
-//Serial.println("wait");                        
-//                    } while (dist < 25);                                                                      // 
-//
-//Serial.println("wait end");                        
-//
-//                    digitalWrite(LED, LOW);
-//
-//                    delay(2000);
-//
-//                    counter = -1;
-//                    
+
+Serial.println("counter = 4");
+                  
+                    digitalWrite(LED, HIGH);
+                    
+                    int dist = 0;                                                                             // временная дистанция
+                    do {                                                                                      // цикл ожидания "забирания" стопки стельки
+                        delay(100);
+                        dist = AveradgeDist();                                                               // считываем показания датчика
+Serial.println("wait");                        
+                    } while (dist < 25);                                                                      // 
+
+Serial.println("wait end");                        
+
+                    digitalWrite(LED, LOW);
+
+
+                    counter = -1;
+                    Work_Point_cm = dist;
+
+                    delay(2000);
+                    
+                    
                 } else {
                     delay(2500);                                                                              // пауза для следующей стельки
                 }                
