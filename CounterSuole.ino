@@ -55,7 +55,7 @@ float AveradgeDist() {
 //    }
 //    res = round(res / 5.0);
 //    return res;
-    float test_double_accuracy = 0.1*int((sonar.ping_median(10 , MAX_DISTANCE)+0.0000001)/57/0.1);
+    float test_double_accuracy = 0.1*int((sonar.ping_median(20 , MAX_DISTANCE)+0.0000001)/57/0.1);
     return test_double_accuracy;
 }
 
@@ -120,7 +120,8 @@ Serial.println("wait end");
                     delay(1000);                                                                              // пауза для следующей стельки
                 }                
             }
-//        } else {                                                                                              // если ошибка чтения
+        } else {                                                                                              // если ошибка чтения
+          Serial.println("ZERO");
 //            Error = -1;
         }
 
