@@ -120,8 +120,8 @@ Serial.println("wait end");
                     delay(1000);                                                                              // пауза для следующей стельки
                 }                
             }
-        } else {                                                                                              // если ошибка чтения
-            Error = -1;
+//        } else {                                                                                              // если ошибка чтения
+//            Error = -1;
         }
 
         if (digitalRead(BUTTON) == HIGH) {                                                                    // если нажата кнопка во время цикла
