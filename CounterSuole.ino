@@ -9,8 +9,8 @@
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
-int Work_Point_cm = 0;
-int delta_cm = 3;
+float Work_Point_cm = 0.0;
+float delta_cm = 0.4;
 
 int Error = 0;
 
@@ -45,15 +45,17 @@ int Blink() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // считывает среднее 5 значений
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int AveradgeDist() {
-    float res;
-    for (int i = 0; i<5; i++) {
-        delay(5);
-        int k = sonar.ping_cm();
-        res = res + k;
-    }
-    res = round(res / 5.0);
-    return res;
+float AveradgeDist() {
+//    float res;
+//    for (int i = 0; i<5; i++) {
+//        delay(5);
+//        int k = sonar.ping_cm();
+//        res = res + k;
+//    }
+//    res = round(res / 5.0);
+//    return res;
+    float test_double_accuracy = 0.2*int((sonar.ping_median(10 , MAX_DISTANCE)+0.0000001)/57/0.2);
+    return test_double_accuracy;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,38 +66,20 @@ void loop() {
     if (Error == 0) {                                                                                         // если нет ошибки
 
         delay(50);
-        int t_cm = AveradgeDist();                                                                            // считываем показания датчика
+        float t_cm = AveradgeDist();                                                                            // считываем показания датчика
 
-// Serial.println(t_cm);
-// Serial.println("MS");
-// Serial.println(sonar.ping(MAX_DISTANCE));
-// Serial.println("custom_t_cm");
-// Serial.println(double((sonar.ping(MAX_DISTANCE)+0.000001)/57));
-// Serial.println("median_t_cm");
-//Serial.println((sonar.ping_median(10 , MAX_DISTANCE)+0.0000001)/57);
-
-     Serial.print("old ");
-     Serial.print(t_cm);  
-     Serial.print(' '); 
-     Serial.print("new ");
-float test_double_accuracy = 0.5*int((sonar.ping_median(10 , MAX_DISTANCE)+0.0000001)/57/0.5);
-Serial.println(test_double_accuracy);
-
-
-
-
-        if (t_cm != 0) {                                                                                      // если показание "удачное"
+        if (t_cm != 0.0) {                                                                                      // если показание "удачное"
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
 
-                if (Work_Point_cm == -1) {                                                                    // если забрали руку
+                if (Work_Point_cm == -1.0) {                                                                    // если забрали руку
                     Work_Point_cm = t_cm;                                                                     // новая рабочая точка
                     Serial.println("back to good value");
                 } else {                                                                                      // если приклали руку
-                    Work_Point_cm = -1;
+                    Work_Point_cm = -1.0;
 
                     counter++;                                                                                // инкримент счетчика
 
-                    Serial.print("counter++ ");
+Serial.print("counter++ ");
 Serial.println(counter);
     
                     digitalWrite(LED, HIGH);                                                                  // мигаем
@@ -103,21 +87,21 @@ Serial.println(counter);
                     digitalWrite(LED, LOW);
                 }
 
-                if (counter >= 20 ) {                                                                          // если стопка заполнена
+                if (counter >= 10 ) {                                                                          // если стопка заполнена
 
                     digitalWrite(LED, HIGH);
 
                     delay(1500);                                                                              // пауза для последней стельки
                     
-                    int dist = 0;                                                                             // временная дистанция
+                    float dist = 0.0;                                                                             // временная дистанция
                     do {                                                                                      // цикл ожидания "забирания" стопки стельки
                         delay(100);
                         dist = AveradgeDist();                                                                // считываем показания датчика
                         Serial.print("wait ");                        
                         Serial.println(dist);
-                    } while (dist < 24);                                                                      // если стопка пустая
+                    } while (dist < 20);                                                                      // если стопка пустая
 
-                    Serial.println("wait end");                        
+Serial.println("wait end");                        
 
                     digitalWrite(LED, LOW);                                                                   // выключаем светодиод
                                         
@@ -126,6 +110,7 @@ Serial.println(counter);
                     Blink();                                                                                  // мигаем
 
                     counter = 0;                                                                              // обнуляем счетчик                    
+                    Work_Point_cm = AveradgeDist();                                                           // новая рабочая точка
                 } else {
                     delay(1000);                                                                              // пауза для следующей стельки
                 }                
@@ -135,14 +120,14 @@ Serial.println(counter);
         }
 
         if (digitalRead(BUTTON) == HIGH) {                                                                    // если нажата кнопка во время цикла
-            digitalWrite(LED, LOW);                                                                   // выключаем светодиод
+            digitalWrite(LED, LOW);                                                                           // выключаем светодиод
             
-            delay(4000);                                                                              // пауза для забора стельки
+            delay(4000);                                                                                      // пауза для забора стельки
             
-            Blink();                                                                                  // мигаем   
+            Blink();                                                                                          // мигаем   
 
-            counter = 0;                                                                              // обнуляем счетчик                    
-            Work_Point_cm = AveradgeDist();                                                                       // новая рабочая точка
+            counter = 0;                                                                                      // обнуляем счетчик                    
+            Work_Point_cm = AveradgeDist();                                                                   // новая рабочая точка
         }
     } else {                                                                                                  // если ошибка
 
