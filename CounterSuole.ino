@@ -66,7 +66,23 @@ void loop() {
         delay(50);
         int t_cm = AveradgeDist();                                                                            // считываем показания датчика
 
-Serial.println(t_cm);
+// Serial.println(t_cm);
+// Serial.println("MS");
+// Serial.println(sonar.ping(MAX_DISTANCE));
+// Serial.println("custom_t_cm");
+// Serial.println(double((sonar.ping(MAX_DISTANCE)+0.000001)/57));
+// Serial.println("median_t_cm");
+//Serial.println((sonar.ping_median(10 , MAX_DISTANCE)+0.0000001)/57);
+
+     Serial.print("old ");
+     Serial.print(t_cm);  
+     Serial.print(' '); 
+     Serial.print("new ");
+float test_double_accuracy = 0.5*int((sonar.ping_median(10 , MAX_DISTANCE)+0.0000001)/57/0.5);
+Serial.println(test_double_accuracy);
+
+
+
 
         if (t_cm != 0) {                                                                                      // если показание "удачное"
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
