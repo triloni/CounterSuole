@@ -4,8 +4,8 @@
 #define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAX_DISTANCE 30 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
-#define LED 10
-#define BUTTON 9
+#define LED          10                                                                                 // светодиод
+#define BUTTON        9
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
@@ -27,7 +27,7 @@ void setup() {
     pinMode(LED, OUTPUT);
     pinMode(BUTTON, INPUT);
 
-    Blink();                                                                                              // мигаем
+    Blink();                                                                                                  // мигаем
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ void setup() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int Blink() {
     for (int i = 0; i<3; i++) {
-        digitalWrite(LED, HIGH);                                                                          // мигаем
+        digitalWrite(LED, HIGH);                                                                              // мигаем
         delay(70);
         digitalWrite(LED, LOW);
         delay(70);
@@ -66,12 +66,12 @@ void loop() {
     if (Error == 0) {                                                                                         // если нет ошибки
 
         delay(50);
-        float t_cm = AveradgeDist();                                                                            // считываем показания датчика
+        float t_cm = AveradgeDist();                                                                          // считываем показания датчика
 
-        if (t_cm != 0.0) {                                                                                      // если показание "удачное"
+        if (t_cm != 0.0) {                                                                                    // если показание "удачное"
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
 
-                if (Work_Point_cm == -1.0) {                                                                    // если забрали руку
+                if (Work_Point_cm == -1.0) {                                                                  // если забрали руку
                     Work_Point_cm = t_cm;                                                                     // новая рабочая точка
                     Serial.println("back to good value");
                 } else {                                                                                      // если приклали руку
