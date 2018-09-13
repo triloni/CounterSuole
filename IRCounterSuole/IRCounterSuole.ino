@@ -21,7 +21,11 @@ unsigned long t_refresh_LED = 0;
 
 
 bool flg1 = false; // test IR
+// lcd
 
+#include <LiquidCrystal.h>
+
+LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // сетап
@@ -33,6 +37,12 @@ void setup() {
     pinMode(BUTTON, INPUT);
 
     Blink();                                                                                                  // мигаем
+
+    lcd.begin(16, 2);
+  // Print a message to the LCD
+
+    lcd.setCursor(4, 0);
+    lcd.print("READY...");
 
 }
 
@@ -46,6 +56,18 @@ int Blink() {
         digitalWrite(LED, LOW);
         delay(70);
     }
+}
+
+int LcdEnd() {
+  for (int i = 0; i<3; i++) {
+    lcd.setCursor(0, 0);
+    lcd.print("0000000000000000");
+    lcd.setCursor(0, 1);
+    lcd.print("0000000000000000");
+    delay(400);
+    lcd.clear();
+    delay(400);
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,8 +136,14 @@ Serial.println(t_cm);
 
                     Work_Point_cm = t_cm;                                                                     // новая рабочая точка
                     Serial.println("ready to measure");
+                    //lcd.clear();
+                    lcd.setCursor(0, 2);
+                    lcd.print(" Ready for calc ");
                 } else {                                                                                      // если приклали руку
                     Work_Point_cm = -1.0;
+                    //lcd.clear();
+                    lcd.setCursor(0, 2);
+                    lcd.print("   Waiting...   ");
 
                     //counter++;
 
@@ -138,7 +166,21 @@ Serial.println(t_cm);
 				flg1 = true;
 		}
 
-		counter++;    
+		counter++; 
+
+    //lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Ammount: ");
+
+    lcd.setCursor(10, 0);
+    lcd.print("  /20");
+
+    lcd.setCursor(10, 0);
+    lcd.print(counter);
+
+    
+
+    
 		Serial.print("counter++ ");
 		Serial.print(counter);
 		
@@ -170,7 +212,8 @@ Serial.println(t_cm);
                     do {                                                                                      // цикл ожидания "забирания" стопки стельки
                         delay(100);
                         dist = AveradgeDist();                                                                // считываем показания датчика
-                        Serial.print("wait ");                        
+                        Serial.print("wait "); 
+                        LcdEnd();                       
                         Serial.println(dist);
                     } while (dist < 29.5);  // 24.5                                                                    // если стопка пустая
 
@@ -180,7 +223,8 @@ Serial.println("wait end");
                                         
                     delay(4000);                                                                              // пауза для забора стельки
                     
-                    Blink();                                                                                  // мигаем
+                    Blink(); // мигаем 
+                    LcdEnd();
 
                     counter = 0;                                                                              // обнуляем счетчик                    
                     Work_Point_cm = AveradgeDist();                                                           // новая рабочая точка
@@ -199,6 +243,7 @@ Serial.println("wait end");
             delay(4000);                                                                                      // пауза для забора стельки
             
             Blink();                                                                                          // мигаем   
+            LcdEnd();
 
             counter = 0;                                                                                      // обнуляем счетчик                    
             Work_Point_cm = AveradgeDist();                                                                   // новая рабочая точка
