@@ -1,5 +1,4 @@
 #define MAX_DISTANCE 30
-
 #define LED          10                                                                                       // светодиод
 #define BUTTON        9                                                                                       // кнопка
 
@@ -35,7 +34,7 @@ void setup() {
     Blink();                                                                                                  // мигаем
 
     lcd.begin(16, 2);
-  // Print a message to the LCD
+	// Print a message to the LCD
 
     lcd.setCursor(4, 0);
     lcd.print("READY...");
@@ -81,7 +80,6 @@ void lcdCount(int counter = 0) {
 }
 
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // считывает среднее 5 значений
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,14 +87,14 @@ float AveradgeDist() {
 	// IR sensor
 
 	float res = 0;
-    for (int i = 0; i<50; i++) {
+    for (int i = 0; i<10; i++) {
         delay(10);
 
         int k = analogRead(IRSensor); //
  
         res = res + k;
     }
-    res = round(res / 50);
+    res = round(res / 10);
 
 	float volts = res*0.0048828125;  // value from sensor * (5/1024)
 	float test_double_accuracy = 13*pow(volts, -1); // worked out from datasheet graph
@@ -118,7 +116,7 @@ void loop() {
 
         delay(50);
         float t_cm = AveradgeDist();                                                                          // считываем показания датчика
-Serial.println(t_cm);
+		Serial.println(t_cm);
         if (t_cm != 0.0) {                                                                                    // если показание "удачное"
           
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
@@ -138,7 +136,7 @@ Serial.println(t_cm);
 
                     //counter++;
 
-//IR test
+					//IR test
     
 					if (analogRead(1) > 900 && analogRead(2) > 900)
 					{
@@ -158,11 +156,9 @@ Serial.println(t_cm);
 						counter++; 
 
 					    lcdCount(counter);
-
 					    
 						Serial.print("counter++ ");
 						Serial.print(counter);
-		
 					}
 
 				// END                                                                                // инкримент счетчика
@@ -187,12 +183,11 @@ Serial.println(t_cm);
                     do {                                                                                      // цикл ожидания "забирания" стопки стельки
                         delay(100);
                         dist = AveradgeDist();                                                                // считываем показания датчика
-                        Serial.print("wait "); 
-                        //LcdEnd();                       
+                        Serial.print("wait ");                       
                         Serial.println(dist);
                     } while (dist < 24.5);  // 24.5                                                                    // если стопка пустая
 
-Serial.println("wait end");                        
+					Serial.println("wait end");                        
 
                     digitalWrite(LED, LOW);                                                                   // выключаем светодиод
                     
@@ -225,10 +220,9 @@ Serial.println("wait end");
 
             counter = 0;  
 
-            //lcd.clear();                                                                                  // обнуляем счетчик     
+            //lcd.clear();                                                                                    // обнуляем счетчик     
 
             lcdCount(counter);
-
 
             Work_Point_cm = AveradgeDist();                                                                   // новая рабочая точка
         }
