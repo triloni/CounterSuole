@@ -1,13 +1,7 @@
-//#include <NewPing.h>
-
-// #define TRIGGER_PIN  12
-// #define ECHO_PIN     11
 #define MAX_DISTANCE 30
 
 #define LED          10                                                                                       // светодиод
 #define BUTTON        9                                                                                       // кнопка
-
-//NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 float Work_Point_cm = 0.0;
 
@@ -19,13 +13,13 @@ int counter = 0; // -1
 
 unsigned int maxCount = 20;
 
+int IRSensor = 3; // IR sensor pin
+
 unsigned long t_refresh_LED = 0;
 
-
 bool flg1 = false; // test IR
-// lcd
 
-#include <LiquidCrystal.h>
+#include <LiquidCrystal.h> // lcd
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
@@ -92,41 +86,20 @@ void lcdCount(int counter = 0) {
 // считывает среднее 5 значений
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float AveradgeDist() {
-//    float res;
-//    for (int i = 0; i<5; i++) {
-//        delay(5);
-//        int k = sonar.ping_cm();
-//        res = res + k;
-//    }
-//    res = round(res / 5.0);
-//    return res;
-
-	//ultrasonic sensor
-    //float test_double_accuracy = 0.1*int((sonar.ping_median(20 , MAX_DISTANCE)+0.0000001)/57/0.1);
-
-
-
 	// IR sensor
 
 	float res = 0;
     for (int i = 0; i<50; i++) {
         delay(10);
-        int sensor = 3;
-        int k = analogRead(sensor); //
-        //Serial.println(k);
+
+        int k = analogRead(IRSensor); //
+ 
         res = res + k;
     }
     res = round(res / 50);
 
 	float volts = res*0.0048828125;  // value from sensor * (5/1024)
 	float test_double_accuracy = 13*pow(volts, -1); // worked out from datasheet graph
-  //delay(300); // slow down serial port 
-  
-  // if (distance <= 30){
-  //   //Serial.println(distance);   // print the distance
-
-  //   Serial.println(analogRead(2));
-  // }
 
 	if (test_double_accuracy > 30)
 	{
@@ -165,48 +138,38 @@ Serial.println(t_cm);
 
                     //counter++;
 
-
-
 //IR test
     
-	if (analogRead(1) > 900 && analogRead(2) > 900)
-	{
-		Serial.println("Рука відсутня");
-		flg1 = false;
-	}
-	else if (analogRead(1) < 900 || analogRead(2) < 900)
-	{
-		Serial.println("Рука");
+					if (analogRead(1) > 900 && analogRead(2) > 900)
+					{
+						Serial.println("Рука відсутня");
+						flg1 = false;
+					}
+					else if (analogRead(1) < 900 || analogRead(2) < 900)
+					{
+						Serial.println("Рука");
 
-		 while(flg1 == false)
-		{
-			if (analogRead(1) > 900 && analogRead(2) > 900)
-				flg1 = true;
-		}
+						 while(flg1 == false)
+						{
+							if (analogRead(1) > 900 && analogRead(2) > 900)
+								flg1 = true;
+						}
 
-		counter++; 
+						counter++; 
 
-    lcdCount(counter);
+					    lcdCount(counter);
 
-    
-
-    
-		Serial.print("counter++ ");
-		Serial.print(counter);
+					    
+						Serial.print("counter++ ");
+						Serial.print(counter);
 		
-		
-	}
-	// Serial.print("flg1 - ");
-	// Serial.println(flg1);
+					}
 
+				// END                                                                                // инкримент счетчика
 
-// END                                                                                // инкримент счетчика
+					Serial.print("  dist ");
+					Serial.println(t_cm);
 
-Serial.print("  dist ");
-Serial.println(t_cm);
-
-
-    
                     digitalWrite(LED, HIGH);                                                                  // мигаем
                     delay(100);
                     digitalWrite(LED, LOW);
