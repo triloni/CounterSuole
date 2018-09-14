@@ -219,22 +219,22 @@ void loop() {
 ////            Error = -1;
 //        }
 
-        if (digitalRead(BUTTON) == HIGH) {                                                                    // если нажата кнопка во время цикла
-            digitalWrite(LED, LOW);                                                                           // выключаем светодиод
-            
-            delay(4000);                                                                                      // пауза для забора стельки
-            
-            Blink();                                                                                          // мигаем   
-            LcdEnd();
-
-            counter = 0;  
-
-            //lcd.clear();                                                                                    // обнуляем счетчик     
-
-            lcdCount(counter);
-
-            Work_Point_cm = AveradgeDist();                                                                   // новая рабочая точка
-        }
+//        if (digitalRead(BUTTON) == HIGH) {                                                                    // если нажата кнопка во время цикла
+//            digitalWrite(LED, LOW);                                                                           // выключаем светодиод
+//            
+//            delay(4000);                                                                                      // пауза для забора стельки
+//            
+//            Blink();                                                                                          // мигаем   
+//            LcdEnd();
+//
+//            counter = 0;  
+//
+//            //lcd.clear();                                                                                    // обнуляем счетчик     
+//
+//            lcdCount(counter);
+//
+//            Work_Point_cm = AveradgeDist();                                                                   // новая рабочая точка
+//        }
 //    } else {                                                                                                  // если ошибка
 //
 //        int state_LED = 0;
