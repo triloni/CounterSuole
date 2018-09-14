@@ -1,6 +1,7 @@
 #define MAX_DISTANCE 30
 #define LED          10                                                                                       // светодиод
 #define BUTTON        9                                                                                       // кнопка
+#define BUTTON        9                                                                                       // кнопка
 
 float Work_Point_cm = 0.0;
 
@@ -18,6 +19,8 @@ unsigned long t_refresh_LED = 0;
 
 bool flg1 = false; // test IR
 
+int SENSOR[2] =  {A1, A2};
+
 #include <LiquidCrystal.h> // lcd
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
@@ -30,6 +33,8 @@ void setup() {
 
     pinMode(LED, OUTPUT);
     pinMode(BUTTON, INPUT);
+    pinMode(SENSOR[0], INPUT);
+    pinMode(SENSOR[1], INPUT);
 
     Blink();                                                                                                  // мигаем
 
@@ -137,20 +142,24 @@ void loop() {
                     //counter++;
 
           					//IR test
-              
-          					if ((analogRead(1) > 900) && (analogRead(2) > 900))
-          					{
-          						Serial.println("Рука відсутня");
-          						flg1 = false;
-          					}
-          					else if ((analogRead(1) < 900) || (analogRead(2) < 900))
+                    flg1 = false; // 
+                    
+//          					if ((digitalRead(SENSOR[0]) == HIGH) && (digitalRead(SENSOR[1]) == HIGH))
+//          					{
+//          						Serial.println("Рука відсутня");
+//          						flg1 = false;
+//          					}
+          					/*else*/ if ((digitalRead(SENSOR[0]) == LOW) || (digitalRead(SENSOR[1]) == LOW))
           					{
           						Serial.println("Рука");
           
           						 while(flg1 == false)
           						{
-          							if ((analogRead(1) > 900) && (analogRead(2) > 900))
+          							if ((digitalRead(SENSOR[0]) == HIGH) && (digitalRead(SENSOR[1]) == HIGH))
           								flg1 = true;
+
+
+                          Serial.println("eeee");
           						}
           
           						counter++; 
