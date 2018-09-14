@@ -112,12 +112,12 @@ float AveradgeDist() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
 
-    if (Error == 0) {                                                                                         // если нет ошибки
+//    if (Error == 0) {                                                                                         // если нет ошибки
 
         delay(50);
         float t_cm = AveradgeDist();                                                                          // считываем показания датчика
 		Serial.println(t_cm);
-        if (t_cm != 0.0) {                                                                                    // если показание "удачное"
+//        if (t_cm != 0.0) {                                                                                    // если показание "удачное"
           
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
 
@@ -136,35 +136,35 @@ void loop() {
 
                     //counter++;
 
-					//IR test
-    
-					if (analogRead(1) > 900 && analogRead(2) > 900)
-					{
-						Serial.println("Рука відсутня");
-						flg1 = false;
-					}
-					else if (analogRead(1) < 900 || analogRead(2) < 900)
-					{
-						Serial.println("Рука");
-
-						 while(flg1 == false)
-						{
-							if (analogRead(1) > 900 && analogRead(2) > 900)
-								flg1 = true;
-						}
-
-						counter++; 
-
-					    lcdCount(counter);
-					    
-						Serial.print("counter++ ");
-						Serial.print(counter);
-					}
-
-				// END                                                                                // инкримент счетчика
-
-					Serial.print("  dist ");
-					Serial.println(t_cm);
+          					//IR test
+              
+          					if ((analogRead(1) > 900) && (analogRead(2) > 900))
+          					{
+          						Serial.println("Рука відсутня");
+          						flg1 = false;
+          					}
+          					else if ((analogRead(1) < 900) || (analogRead(2) < 900))
+          					{
+          						Serial.println("Рука");
+          
+          						 while(flg1 == false)
+          						{
+          							if ((analogRead(1) > 900) && (analogRead(2) > 900))
+          								flg1 = true;
+          						}
+          
+          						counter++; 
+          
+          					    lcdCount(counter);
+          					    
+          						Serial.print("counter++ ");
+          						Serial.print(counter);
+          					}
+          
+          				// END                                                                                // инкримент счетчика
+          
+          					Serial.print("  dist ");
+          					Serial.println(t_cm);
 
                     digitalWrite(LED, HIGH);                                                                  // мигаем
                     delay(100);
@@ -187,7 +187,7 @@ void loop() {
                         Serial.println(dist);
                     } while (dist < 24.5);  // 24.5                                                                    // если стопка пустая
 
-					Serial.println("wait end");                        
+					          Serial.println("wait end");                        
 
                     digitalWrite(LED, LOW);                                                                   // выключаем светодиод
                     
@@ -205,10 +205,10 @@ void loop() {
                     delay(1000);                                                                              // пауза для следующей стельки
                 }                
             }
-        } else {                                                                                              // если ошибка чтения
-          Serial.println("ZERO");
-//            Error = -1;
-        }
+//        } else {                                                                                              // если ошибка чтения
+//          Serial.println("ZERO");
+////            Error = -1;
+//        }
 
         if (digitalRead(BUTTON) == HIGH) {                                                                    // если нажата кнопка во время цикла
             digitalWrite(LED, LOW);                                                                           // выключаем светодиод
@@ -226,24 +226,24 @@ void loop() {
 
             Work_Point_cm = AveradgeDist();                                                                   // новая рабочая точка
         }
-    } else {                                                                                                  // если ошибка
-
-        int state_LED = 0;
-        t_refresh_LED = millis();
-
-        do {                                                                                                  // цикл ожидания нажатия на кнопку
-           if (millis() - t_refresh_LED > 500) {
-              state_LED = 1 - state_LED;
-              digitalWrite(LED, state_LED);
-              t_refresh_LED = millis();
-           }
-            
-        } while (digitalRead(BUTTON) == LOW);                
-        
-        digitalWrite(LED, LOW);                                                                               // выключаем светодиод
-        
-        Error = 0;                                                                                            // сбрасываем ошибку
-        counter = 0;                                                                                          // обнуляем счетчик                    
-        Work_Point_cm = AveradgeDist();                                                                       // новая рабочая точка
-    }
+//    } else {                                                                                                  // если ошибка
+//
+//        int state_LED = 0;
+//        t_refresh_LED = millis();
+//
+//        do {                                                                                                  // цикл ожидания нажатия на кнопку
+//           if (millis() - t_refresh_LED > 500) {
+//              state_LED = 1 - state_LED;
+//              digitalWrite(LED, state_LED);
+//              t_refresh_LED = millis();
+//           }
+//            
+//        } while (digitalRead(BUTTON) == LOW);                
+//        
+//        digitalWrite(LED, LOW);                                                                               // выключаем светодиод
+//        
+//        Error = 0;                                                                                            // сбрасываем ошибку
+//        counter = 0;                                                                                          // обнуляем счетчик                    
+//        Work_Point_cm = AveradgeDist();                                                                       // новая рабочая точка
+//    }
 }
