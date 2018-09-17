@@ -5,7 +5,7 @@
 
 float Work_Point_cm = 0.0;
 
-float delta_cm = 0.45;
+float delta_cm = 0.8; // 0.45 0.5 0.8
 
 int Error = 0;
 
@@ -23,13 +23,16 @@ int SENSOR[2] =  {A1, A2};
 
 #include <LiquidCrystal.h> // lcd
 
+
+int preCounter = 0;
+
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // сетап
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
-    Serial.begin(9600);
+    //Serial.begin(9600);
 
     pinMode(LED, OUTPUT);
     pinMode(BUTTON, INPUT);
@@ -43,7 +46,6 @@ void setup() {
 
     lcd.setCursor(4, 0);
     lcd.print("READY...");
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +95,7 @@ float AveradgeDist() {
 
 	float res = 0;
     for (int i = 0; i<10; i++) {
-        delay(10);
+        //delay(10);
 
         int k = analogRead(IRSensor); //
  
@@ -119,61 +121,58 @@ void loop() {
 
 //    if (Error == 0) {                                                                                         // если нет ошибки
 
-        delay(50);
+        //delay(50);
+
         float t_cm = AveradgeDist();                                                                          // считываем показания датчика
-		Serial.println(t_cm);
+
+//		Serial.println(t_cm);
 //        if (t_cm != 0.0) {                                                                                    // если показание "удачное"
           
             if (abs(t_cm - Work_Point_cm) > delta_cm) {                                                       // если большое отклонение
 
-                if (Work_Point_cm == -1.0) {                                                                  // если забрали руку
-
-                    Work_Point_cm = t_cm;                                                                     // новая рабочая точка
-                    Serial.println("ready to measure");
-                    //lcd.clear();
+                if (Work_Point_cm == -1.0) 																// если забрали руку
+                {                                                                  
+                    Work_Point_cm = t_cm;                                                               // новая рабочая точка
+                    //Serial.println("ready to measure");
                     lcd.setCursor(0, 2);
                     lcd.print(" Ready for calc ");
-                } else {                                                                                      // если приклали руку
+                } 
+                else 
+                {                                                                                      // если приклали руку
                     Work_Point_cm = -1.0;
-                    //lcd.clear();
                     lcd.setCursor(0, 2);
                     lcd.print("   Waiting...   ");
-
-                    //counter++;
-
-          					//IR test
                     flg1 = false; // 
-                    
-//          					if ((digitalRead(SENSOR[0]) == HIGH) && (digitalRead(SENSOR[1]) == HIGH))
-//          					{
-//          						Serial.println("Рука відсутня");
-//          						flg1 = false;
-//          					}
-          					/*else*/ if ((digitalRead(SENSOR[0]) == LOW) || (digitalRead(SENSOR[1]) == LOW))
-          					{
-          						Serial.println("Рука");
-          
-          						 while(flg1 == false)
-          						{
-          							if ((digitalRead(SENSOR[0]) == HIGH) && (digitalRead(SENSOR[1]) == HIGH))
-          								flg1 = true;
 
+                    preCounter = counter; // якщо стелька не зафіксована то можливо дискретний датчик спрацював випадково і не потрібно чекати довго
 
-                          Serial.println("eeee");
-          						}
-          
-          						counter++; 
-          
-          					    lcdCount(counter);
-          					    
-          						Serial.print("counter++ ");
-          						Serial.print(counter);
-          					}
-          
-          				// END                                                                                // инкримент счетчика
-          
-          					Serial.print("  dist ");
-          					Serial.println(t_cm);
+					if ((digitalRead(SENSOR[0]) == LOW) || (digitalRead(SENSOR[1]) == LOW))
+  					{
+  						//Serial.println("Рука");
+  
+  						 while(flg1 == false)
+  						{
+  							if ((digitalRead(SENSOR[0]) == HIGH) && (digitalRead(SENSOR[1]) == HIGH))
+  							{
+  								delay(20); // затримка на скидання флагу (при проведенні руки інколи зникає контакт)
+  								flg1 = true;
+  							}
+
+                  			//Serial.println("eeee");
+  						}
+  
+  						counter++; 
+  
+  					    lcdCount(counter);
+  					    
+  						//Serial.print("counter++ ");
+  						//Serial.print(counter);
+  					}
+  
+  				// END                                                                                // инкримент счетчика
+  
+  					//Serial.print("dist: ");
+  					//Serial.println(t_cm);
 
                     digitalWrite(LED, HIGH);                                                                  // мигаем
                     delay(100);
@@ -192,11 +191,11 @@ void loop() {
                     do {                                                                                      // цикл ожидания "забирания" стопки стельки
                         delay(100);
                         dist = AveradgeDist();                                                                // считываем показания датчика
-                        Serial.print("wait ");                       
-                        Serial.println(dist);
+                        //Serial.print("wait ");                       
+                        //Serial.println(dist);
                     } while (dist < 24.5);  // 24.5                                                                    // если стопка пустая
 
-					          Serial.println("wait end");                        
+					          //Serial.println("wait end");                        
 
                     digitalWrite(LED, LOW);                                                                   // выключаем светодиод
                     
@@ -211,9 +210,40 @@ void loop() {
 
                     Work_Point_cm = AveradgeDist();                                                           // новая рабочая точка
                 } else {
-                    delay(1000);                                                                              // пауза для следующей стельки
+                	// Serial.print("preCounter = "); 
+                	// Serial.print(preCounter);
+                	// Serial.print("counter = "); 
+                	// Serial.println(counter);  
+                	if(preCounter != counter) // якщо стелька не зафіксована то можливо дискретний датчик спрацював випадково тоді не потрібно чекати довго
+                    {
+                    	delay(400);                                                                              // пауза для следующей стельки
+                    }
+                    else
+                    {
+                    	delay(100);
+                    }
                 }                
             }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //        } else {                                                                                              // если ошибка чтения
 //          Serial.println("ZERO");
 ////            Error = -1;
@@ -255,4 +285,4 @@ void loop() {
 //        counter = 0;                                                                                          // обнуляем счетчик                    
 //        Work_Point_cm = AveradgeDist();                                                                       // новая рабочая точка
 //    }
-}
+
