@@ -2,7 +2,7 @@
 #define MAX_COUNT    20
 #define LED          10
 #define IR_SENSOR     3
-#define DELTA_CM    0.6  // 0.45 0.5 0.8
+#define DELTA_CM     0.5  // 0.45 0.5 0.8
 #define distMeasurementsAmmount 10
 
 #include <LiquidCrystal.h> // lcd
@@ -108,7 +108,7 @@ int activityCounter(int pakageSize = 10, int persentage = 30) {
   }
   else 
   {
-    if(availiableError < 3)
+    if(availiableError < 10)
     {
       availiableError = 0;
       pakageCounter = 0;
@@ -144,6 +144,25 @@ void loop() {
     Serial.print("persentage: ");
     Serial.println(test);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // if (counter >= MAX_COUNT) {                                                                         // если стопка заполнена
