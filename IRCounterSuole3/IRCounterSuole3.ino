@@ -1,3 +1,6 @@
+// This scetch detects movement activity baced on IR sensor measurements
+
+
 #define MAX_DISTANCE 30
 #define MAX_COUNT    20
 #define LED          10
